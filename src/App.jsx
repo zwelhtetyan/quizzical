@@ -56,7 +56,7 @@ const App = () => {
         setIsStartQuiz((isStartQuiz) => !isStartQuiz);
     };
 
-    //update selected
+    //update selected and calculate number of correct answer
     useEffect(() => {
         setSelected(
             answers.every((answerArr) =>
