@@ -1,13 +1,13 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
+import { decode } from 'html-entities';
 
 const Question = (props) => {
-    const regex = new RegExp('&quot;', 'gi');
     const questionAndAnswers = props.question.map((data, idx) => {
         return (
             <div key={nanoid()} className='question-and-answer'>
                 <div className='question'>
-                    {data.question.replace(regex, '"')}
+                    {decode(data.question, { level: 'html5' })}
                 </div>
 
                 <div className='answers'>
@@ -30,7 +30,7 @@ const Question = (props) => {
                                 }`}
                                 onClick={(e) => props.handleSelect(e, idx)}
                             >
-                                {ans.answer.replace(regex, '"')}
+                                {decode(ans.answer, { level: 'html5' })}
                             </div>
                         );
                     })}
