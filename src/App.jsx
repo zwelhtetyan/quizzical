@@ -31,9 +31,7 @@ const App = () => {
 
     // preparing answers
     const settingAnswers = (dataArr) => {
-        const finalArr = [];
-
-        dataArr.map((data) => {
+        const finalArr = dataArr.map((data) => {
             const newArr = [...data.incorrect_answers];
             // (+1) means => correct answer will also be the last
             newArr.splice(
@@ -42,17 +40,16 @@ const App = () => {
                 data.correct_answer
             );
 
-            const answerArr = newArr.map((ans) => {
+            return newArr.map((ans) => {
                 return {
                     answer: ans,
                     correct: ans === data.correct_answer ? true : false,
                     selected: false,
                 };
             });
-            finalArr.push(answerArr);
         });
 
-        setAnswers((answers) => [...finalArr]);
+        setAnswers(finalArr);
     };
 
     const startQuiz = () => {
