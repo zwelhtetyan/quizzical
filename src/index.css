@@ -97,6 +97,10 @@ body {
     margin-right: 1em;
     margin-bottom: 0.5em;
     cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    color: var(--font-color);
+    background-color: transparent;
 }
 
 .ansItem.selected {

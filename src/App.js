@@ -3,6 +3,7 @@ import Question from './components/Question';
 import Welcome from './components/Welcome';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { decode } from 'html-entities';
 
 const App = () => {
     const [questionData, setQuestionData] = useState([]);
@@ -11,6 +12,7 @@ const App = () => {
     const [checking, setChecking] = useState(false);
     const [selected, setSelected] = useState(false);
     const [numberOfCorrect, setNumberOfCorrect] = useState(0);
+    const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         const res = await fetch(
@@ -18,6 +20,7 @@ const App = () => {
         );
         const data = await res.json();
         setQuestionData(data.results);
+        setLoading(false);
     };
 
     //fetching data inside useEffect
@@ -63,7 +66,7 @@ const App = () => {
                 answerArr.some((ans) => ans.selected === true)
             )
         );
-        setNumberOfCorrect((numberOfCorrect) => {
+        setNumberOfCorrect(() => {
             const number = answers.filter((answerArr) =>
                 answerArr.some((ans) => ans.selected && ans.correct)
             );
@@ -74,7 +77,7 @@ const App = () => {
     const handleSelect = (e, idx) => {
         setAnswers((prevAns) => {
             const newArr = prevAns[idx].map((ans) =>
-                ans.answer === e.target.innerText
+                decode(ans.answer, { level: 'html5' }) === e.target.innerText
                     ? { ...ans, selected: true }
                     : { ...ans, selected: false }
             );
@@ -85,6 +88,7 @@ const App = () => {
 
     const checkAnswer = (e) => {
         if (e.target.innerText === 'Play Again') {
+            setLoading(true);
             fetchData();
         }
         setChecking((checking) => !checking);
@@ -94,7 +98,7 @@ const App = () => {
     const notify = () => {
         toast.info('You need to answer all question !', {
             position: 'top-right',
-            autoClose: 1500,
+            autoClose: 500,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
@@ -105,17 +109,7 @@ const App = () => {
 
     return (
         <main className='main-container'>
-            <ToastContainer
-                position='top-right'
-                autoClose={2000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
+            <ToastContainer />
             {isStartQuiz ? (
                 <Question
                     question={questionData}
@@ -126,6 +120,7 @@ const App = () => {
                     selected={selected}
                     notify={notify}
                     numberOfCorrect={numberOfCorrect}
+                    loading={loading}
                 />
             ) : (
                 <Welcome startQuiz={startQuiz} question={questionData} />

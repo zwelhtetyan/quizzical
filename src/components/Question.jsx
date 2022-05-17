@@ -13,7 +13,7 @@ const Question = (props) => {
                 <div className='answers'>
                     {props.answers[idx].map((ans) => {
                         return (
-                            <div
+                            <button
                                 key={nanoid()}
                                 className={`ansItem ${
                                     ans.selected ? 'selected' : ''
@@ -29,9 +29,10 @@ const Question = (props) => {
                                         : ''
                                 }`}
                                 onClick={(e) => props.handleSelect(e, idx)}
+                                disabled={props.checking ? true : false}
                             >
                                 {decode(ans.answer, { level: 'html5' })}
-                            </div>
+                            </button>
                         );
                     })}
                 </div>
@@ -50,8 +51,13 @@ const Question = (props) => {
                     className='check-answers'
                     onClick={props.selected ? props.checkAnswer : props.notify}
                     style={{ margin: props.checking && 'unset' }}
+                    disabled={props.loading ? true : false}
                 >
-                    {props.checking ? `Play Again` : 'Check Answers'}
+                    {props.loading
+                        ? 'loading'
+                        : props.checking
+                        ? `Play Again`
+                        : 'Check Answers'}
                 </button>
             </div>
         </div>
